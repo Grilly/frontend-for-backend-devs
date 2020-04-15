@@ -25,15 +25,19 @@
   <body>
     <div class="reveal">
       <div class="slides">
-        <section data-theme="yellow">
+        <section id="frontend-for-backend-devs" data-theme="yellow">
           <h1>Frontend</h1>
           <h2>for backend devs</h2>
+        </section>
+
+        <section>
+          <reveal-toc></reveal-toc>
         </section>
 
         <section data-external-replace="content/slides/js-the-history/"></section>
         <section data-external-replace="content/slides/js-the-language/"></section>
 
-        <section data-theme="yellow">
+        <section id="the-end" data-theme="yellow">
           <h1>The end</h1>
           <h2>for now…</h2>
         </section>
@@ -61,6 +65,48 @@
           },
           { src: 'plugin/switch-theme/switch-theme.js', condition: () => document.querySelector('[data-theme]') },
         ],
+      })
+
+      Reveal.addEventListener('ready', () => {
+        class RevealTOC extends HTMLElement {
+          constructor() {
+            super()
+
+            const shadow = this.attachShadow({ mode: 'open' })
+            const ul = document.createElement('ul')
+            const items = this.slides().map(({ id, title }) => {
+              const fragment = document.createDocumentFragment()
+              const li = document.createElement('li')
+              const anchor = document.createElement('a')
+              anchor.setAttribute('href', `#${id}`)
+              anchor.innerText = title
+              li.appendChild(anchor)
+              fragment.appendChild(li)
+              return fragment
+            })
+
+            items.forEach((item) => {
+              ul.appendChild(item)
+            })
+            shadow.appendChild(ul)
+          }
+
+          slides() {
+            return Reveal.getSlides()
+              .reduce((acc, slide, i) => {
+                const title = [...slide.querySelectorAll('h1, h2, h3, h4, h5, h6')]
+                  .map((header) => header.textContent)
+                  .join(' ')
+                const id = slide.id
+
+                acc[i] = { id, title }
+                return acc
+              }, [])
+              .filter(Boolean)
+          }
+        }
+
+        customElements.define('reveal-toc', RevealTOC)
       })
     </script>
   </body>
