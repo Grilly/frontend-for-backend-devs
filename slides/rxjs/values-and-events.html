@@ -1,0 +1,90 @@
+<section data-theme="rxjs">
+  <img src="assets/logo-rx.svg" alt="Logo RX" style="width: 6em;" />
+  <h1>RxJS</h1>
+  <h2>Values and events</h2>
+</section>
+
+<section data-theme="rxjs">
+  <h3>Two dimensions <span class="pager">(1/5)</span></h3>
+  <p style="margin-bottom: 0.5em;">Reactive programming works in two <em>"dimensions"</em>:</p>
+  <ul>
+    <li class="fragment">spatial (values in space/memory)</li>
+    <li class="fragment">temporal (events over time)</li>
+  </ul>
+  <!-- todo: add more content? -->
+</section>
+
+<section data-theme="rxjs">
+  <h3>Array comparison <span class="pager">(2/5)</span></h3>
+  <p>An observable is similar to a plain JS <code>Array</code>:</p>
+  <div class="row fragment" data-fragment-index="1">
+    <pre class="col"><code data-trim data-noescape class="ts">
+      of(1, 2, 3).pipe(
+        <span class="fragment" data-fragment-index="2">filter((nr) => nr > 1),</span>
+        <span class="fragment" data-fragment-index="3">map((nr) => nr * 10),</span>
+        <span class="fragment" data-fragment-index="4">scan((acc, nr) => acc + nr, 0)</span>
+      )
+      .subscribe((result) => {
+        console.log(result);
+      });
+      <span class="fragment replace" data-fragment-index="1">// 1
+      // 2
+      // 3</span><span class="fragment replace" data-fragment-index="2">// 2
+      // 3</span><span class="fragment replace" data-fragment-index="3">// 20
+      // 30</span><span class="fragment" data-fragment-index="4">// 20
+      // 50</span>
+    </code></pre>
+    <pre class="col"><code data-trim data-noescape class="ts">
+      const result = [1, 2, 3]
+        <span class="fragment" data-fragment-index="2">.filter((nr) => nr > 1)</span>
+        <span class="fragment" data-fragment-index="3">.map((nr) => nr * 10)</span>
+        <span class="fragment" data-fragment-index="4">.reduce((acc, nr) => acc + nr, 0);</span>
+
+      console.log(result);
+
+
+      <span class="fragment replace" data-fragment-index="1">// [1, 2, 3]</span><span class="fragment replace" data-fragment-index="2">// [2, 3]</span><span class="fragment replace" data-fragment-index="3">// [20, 30]</span><span class="fragment" data-fragment-index="4">// 50</span>
+    </code></pre>
+  </div>
+  <div class="row" style="font-size: 0.8em;">
+    <ul class="col" style="margin-left: 1em;">
+      <li class="fragment" data-fragment-index="5">Values are handled <em>individually</em></li>
+      <li class="fragment" data-fragment-index="7">Values may appear <em>over time</em></li>
+      <li class="fragment" data-fragment-index="9">Functionality is <em>composed</em></li>
+    </ul>
+    <ul class="col" style="margin-left: 1em;">
+      <li class="fragment" data-fragment-index="6">Values are handled as a <em>list</em></li>
+      <li class="fragment" data-fragment-index="8">Values are always <em>static</em></li>
+      <li class="fragment" data-fragment-index="10">Functionality is <em>chained</em></li>
+    </ul>
+  </div>
+</section>
+
+<!-- todo: remove this? -->
+<section data-theme="rxjs">
+  <h3>Nesting <span class="pager">(3/5)</span></h3>
+  <p>Both observables and arrays can be nested:</p>
+  <div class="row fragment">
+    <pre class="col"><code data-trim data-noescape class="ts">
+      of(of(1), of(2)).pipe(
+        flatMap((val) => val)
+      )
+      .subscribe((result) => {
+        console.log(result);
+      });
+
+      // 1
+      // 2
+    </code></pre>
+    <pre class="col"><code data-trim data-noescape class="ts">
+      const result = [[1], [2]]
+        .flatMap((val) => val);
+
+
+      console.log(result);
+
+
+      // [1, 2]
+    </code></pre>
+  </div>
+</section>
